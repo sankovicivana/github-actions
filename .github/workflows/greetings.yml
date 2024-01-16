@@ -1,16 +1,28 @@
-name: Greetings
+name: Merge to Deploy Branch
 
-on: [pull_request_target, issues]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  greeting:
+  merge_to_deploy_branch:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
+
     steps:
-    - uses: actions/first-interaction@v1
+    - name: Checkout main branch
+      uses: actions/checkout@v2
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: "Message that will be displayed on users' first issue"
-        pr-message: "Message that will be displayed on users' first pull request"
+        ref: main
+
+    - name: Create and checkout deploy branch
+      run: git checkout -b deploy
+
+    - name: Merge changes from main to deploy
+      run: git merge main
+
+    - name: Push changes to deploy branch
+      uses: ad-m/github-push-action@master
+      with:
+        branch: deploy
+        github_token: ${{ secrets.GITHUB_TOKEN }}
