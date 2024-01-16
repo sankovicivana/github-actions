@@ -13,9 +13,8 @@ jobs:
     - name: Checkout main branch
       uses: actions/checkout@v2
       with:
-        node-version: '16'
-      with:
         ref: main
+        node-version: '16'
 
     - name: Create and checkout deploy branch
       run: git checkout -b deploy
